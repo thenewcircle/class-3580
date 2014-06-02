@@ -2,7 +2,7 @@
 [width="90%",frame="topbot",options="header,footer"]
 |======================
 |## |Description                                      |Day  |Page*
-|-- |-----------------------------------------------  |---  |-----
+
 |01 |Status Activity Layout                           |1    |93-96 (project creation), 97-111, 112 (client library)
 |02 |Status Activity Landscape Layout                 |1    |124-127
 |03 |Handling UI Events                               |2    |
@@ -19,7 +19,7 @@
 |14 |Create a Timeline Fragment                       |5    |
 |15 |Create a Custom View                             |5    |
 |16 |Create NotificationReceiver                      |5    |
-|-- |-----------------------------------------------  |---  |-----
+
 |======================
 
 * Page from 2nd edition of "Learning Android"
