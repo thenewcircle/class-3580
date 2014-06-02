@@ -1,0 +1,252 @@
+**Lab 1.0 – Status Activity Layout**
+
+**Overview: **
+
+In this lab you will build a simple UI.
+
+**Setup:**
+
+Android Studio should be installed.
+
+**Steps**
+
+  1) Create a new Android Project in Android Studio
+
+  1.a) From the Android Studio Welcome screen select "New Project"
+
+Enter the following values in the "New Project" wizard:
+
+[cols="2"]
+|===
+
+|Application Name
+|Yamba
+
+|Module Name
+|yamba
+
+|Package Name
+|com.thenewcircle.yamba
+
+|Project Location
+|<your directory>/YambaProject
+
+|Minimum Required SDK
+|API 15
+
+|Target SDK
+|API 19
+
+|Compile With
+|API 19
+
+|Language Level
+|7.0
+
+|Theme
+|Halo Light With Dark Action Bar
+
+|Create custom launcher icon
+|unchecked
+
+|Create activity
+|checked
+
+|Mark this project as library
+|unchecked
+
+|===
+
+Click "Next"
+
+  1.b) Complete the 2nd screen of the New Project wizard.
+
+Select "Blank Activity"
+
+Click "Next"
+
+  1.c) Complete the 3rd screen of the New Project wizard.
+
+Enter the following:
+
+[cols="2*"]
+|===
+
+|Activity Name
+|StatusActivity
+
+|Layout Name
+|activity_status
+
+|===
+
+Click "Finish"
+
+ 2) Modify
+  the StatusActivity layout
+
+This screen will have four components:
+
+- A title at the top of the screen. This will be a TextView  widget.
+
+- A big text area to type our 140-character status update. We’ll use an EditText
+ widget for this purpose.
+
+- A button to click to update the status. This will be a Button  widget.
+
+- A layout to contain all these widgets and lay them out one after another in a vertical
+fashion. For this screen, we’ll use LinearLayout , one of the more common ones.
+
+You can modify the XML layout file using the layout editor or by modifying the XML
+directly as shown below:
+
+[source, title=res/layout.status.xml]
+----
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Main Layout of Status Activity -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <!-- Title TextView-->
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="30sp"
+        android:layout_margin="10dp"
+        android:text="@string/titleStatus"/>
+
+    <!-- Status EditText -->
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:hint="@string/hintText"
+        android:id="@+id/editText"
+        android:gravity="top|center_horizontal">
+    </EditText>
+
+    <!-- Update Button -->
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonUpdate"
+        android:textSize="20sp"
+        android:id="@+id/buttonUpdate">
+    </Button>
+
+</LinearLayout>
+----
+
+The text values in the layout have been externalized as string resources.
+
+Verify that they are included in the +strings.xml+ file
+
+[source, title=res/values/strings.xml]
+----
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Yamba 1</string>
+    <string name="titleYamba">Yamba</string>
+    <string name="titleStatus">Status Update</string>
+    <string name="hintText">Please enter your 140-character status</string>
+    <string name="buttonUpdate">Update</string>
+</resources>
+----
+
+
+[source, java, title=StatusActivity.java]
+----
+package com.thenewcircle.yamba;
+
+import winterwell.jtwitter.Twitter;
+import android.app.Activity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+
+public class StatusActivity1 extends Activity implements OnClickListener { <1>
+
+    private static final String TAG = "StatusActivity";
+    EditText editText;
+    Button updateButton;
+    Twitter twitter;
+
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.status);
+
+        // Find views
+        editText = (EditText) findViewById(R.id.editText); <2>
+        updateButton = (Button) findViewById(R.id.buttonUpdate);
+
+        updateButton.setOnClickListener(this); <3>
+        twitter = new Twitter("student", "password"); <4>
+        twitter.setAPIRootUrl("http://yamba.marakana.com/api");
+    }
+
+    // Called when button is clicked <5>
+    public void onClick(View v) {
+        twitter.setStatus(editText.getText().toString()); <6>
+        Log.d(TAG, "onClicked");
+    }
+}
+----
+
+<1> To make StatusActivity  capable of being a button listener, it needs to implement
+the OnClickListener  interface.
+
+<2> Find views inflated from the XML layout and assign them to Java variables.
+
+<3> Register the button to notify this  (i.e., StatusActivity ) when it gets clicked.
+
+<4> Connect to the online service that supports the Twitter API. At this point, we hardcode
+the username and password.
+
+<5> The method that is called when button is clicked, as part of the OnClickListener
+ interface.
+
+<6> Make the web service API call to the cloud to update our status.
+
+
+3) Add the +jtwitter.jar+ library
+
+Create a new directory called "libs"
+
+Place jtwitter.jar into "libs"
+
+Verify that the library is referened in the dependencies section of
+the +build.gradle+ file
+
+[source, title=build.gradle]
+----
+<?xml version="1.0" encoding="utf-8"?>
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar']) <1>
+    compile 'com.android.support:appcompat-v7:19.+'
+}
+----
+<1> Includes any jar file in the +libs+ directory.
+
+
+describes changes to "res/values" for
+  dimens
+  strings
+  styles
+
+capture screen image
+image::images/lab-01-app.png
+
+
+
+
+--- the end ----

@@ -1,0 +1,9 @@
+include ':yamba-lab-01'
+include ':yamba-lab-02'
+include ':yamba-lab-03'
+include ':yamba-lab-04'
+include ':yamba-lab-05'
+include ':yamba-lab-06'
+include ':yamba-lab-07'
+include ':yamba-lab-08'
+

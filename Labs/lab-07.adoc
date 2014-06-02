@@ -1,0 +1,58 @@
+**Lab 7.0 – Add server and refresh interval to preferences   **
+
+**Overview: **
+
+In this lab you will ...
+
+**Steps**
+
+ .1)  Define reset intervals.
+ 
+ .b  Define possible reset values by creating two associated arrays.  The first which declares
+ the readable name for the interval and the second which declares the value in milliseconds for 
+ each interval.  
+ 
+ in +res/values/arrays.xml+
+ 
+[source]
+----
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+ <string-array name="interval_names">
+     <item>Fiftheen minutes</item>
+     <item>Half an hour</item>
+     <item>An hour</item>
+     <item>Half a day</item>
+     <item>A day</item>
+     <item>Never</item>
+ </string-array>
+ 
+ <string-array name="interval_values">
+     <item>900000</item>
+     <item>1800000</item>
+     <item>3600000</item>
+     <item>43200000</item>
+     <item>86400000</item>
+     <item>0</item>
+ </string-array>
+
+</resources>
+----
+
+In +res/xml/settings.xml+
+
+[source]
+----
+<ListPreference
+    android:entries="@array/interval_names"
+    android:entryValues="@array/interval_values"
+    android:key="interval"
+    android:summary="@string/interval_summary"
+    android:title="@string/interval" />
+----
+
+Note:  No other changes are necessary.  The +SettingsActivity+ will automatically include the
+new settings value.
+
+ 2.  Run the app.  The new settings screen should appear as below:

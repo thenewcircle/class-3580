@@ -1,0 +1,53 @@
+**Lab 8.0 – Create Main activity   **
+
+**Overview: **
+
+In this lab you will create a new activity which will act as the entry point into the app.  For now
+it will just show an empty screen along with a menu from which the user can navigate to other
+activities within the app.
+
+**Steps**
+
+ .1)  Create a new activity.
+ 
+ a.  Using the context menu from the package +com.thenewcircle.yamba+ select the following:
+ 
+ New -> Activity -> Blank Activity
+ 
+ This will display the *New Blank Activity* wizard.
+ 
+ 
+[cols="2*"]
+|===
+
+|Activity Name
+|MainActivity
+
+|Layout Name
+|activity_main
+
+|Title
+|MainActivity
+
+|Launcher Activity
+|checked
+
+|Hierarchical Parent
+|blank
+|===
+
+By checking *Launcher Activity* an activity element will be automatically added to the +AndroidManifest.xml+ file.
+
+You can also modify the manifest file manually.  Verify that the entry in the manifest file is correct.
+
+[source]
+----
+<activity
+    android:name="com.thenewcircle.yamba.MainActivity"
+    android:label="@string/title_activity_main" >
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+</activity>
+----        

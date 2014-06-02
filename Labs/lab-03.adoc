@@ -1,0 +1,69 @@
+**Lab 3.0 – Handling UI Events   **
+
+**Overview: **
+
+In this lab you will create a layout to be used when the device is in landscape mode.
+
+**Steps**
+
+ .1) Add a TextView with id text_count to status activity. (hint: don’t forget to update landscape layout as well!).
+
+[source]
+----
+<TextView
+    android:id="@+id/status_text_count"
+    style="@style/font_general"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignRight="@+id/status_button_tweet"
+    android:layout_below="@+id/status_button_tweet"
+    android:text="140" />
+----
+
+ .2) Add a TextWatcher listener to editStatus and update textCount as user types.
+
+[source]
+----
+private TextView mTextCount;
+
+mTextStatus.addTextChangedListener(new TextWatcher() {
+
+  	@Override
+  	public void afterTextChanged(Editable s) {
+    		int count = 140 - s.length();
+    		mTextCount.setText(Integer.toString(count));
+
+    		if (count < 50) {
+    			mTextCount.setTextColor(Color.RED);
+    		} else {
+    			mTextCount.setTextColor(mDefaultColor);
+    		}
+  	}
+
+  	@Override
+  	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+  	}
+
+  	@Override
+  	public void onTextChanged(CharSequence s, int start, int before, int count) {
+  	}
+
+});
+----
+
+ .3) Tell user how many characters are left, assuming we have 140 total.
+
+[source]
+----
+@Override
+public void afterTextChanged(Editable s) {
+    int count = 140 - s.length();
+    mTextCount.setText(Integer.toString(count));
+
+    if (count < 50) {
+      mTextCount.setTextColor(Color.RED);
+    } else {
+      mTextCount.setTextColor(mDefaultColor);
+    }
+}
+----

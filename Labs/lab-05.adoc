@@ -1,0 +1,62 @@
+**Lab 5.0 – Using fragments statically    **
+
+**Overview: **
+
+In this lab you will modify the activity to use fragments.
+
+**Steps**
+
+ .1)  Move StatusActivity logic in a fragment class
+ 
+ ..a  Create +StatusFragment+ class that extends +Fragment+
+ 
+[source]
+----
+public class StatusFragment extends Fragment
+----
+ 
+ ..b  Override the +onCreateView+ method
+ 
+ [source]
+ ----
+ public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+ ----
+ 
+ ..c  Rename "res/layout/activity_status" to +res/layout/fragment_status+.  
+  Do the same for the layout in +res/layout-land\+.
+ 
+ ..d  Inflate the fragment view manually
+ 
+ [source]
+ ----
+ public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+ 
+        View v = inflater.inflate(R.layout.fragment_status, null, false);
+ ----
+ 
+ ..e  Move the logic from +StatusActivity+ into the new fragment class.
+ 
+ ..f  Remove code from +StatusActivity+.  It should now only contain the +onCreate+ method.
+ 
+[source]
+----
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+ super.onCreate(savedInstanceState);
+}
+----
+
+ ..g  
+ 
+  [source]
+  ----
+ if (savedInstanceState == null) {
+     // Create a fragment
+     StatusFragment fragment = new StatusFragment();
+     getFragmentManager()
+             .beginTransaction()
+             .add(android.R.id.content, fragment, fragment.getClass().getSimpleName()).commit();
+ }
+  ----
+
+
