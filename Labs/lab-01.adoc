@@ -82,10 +82,9 @@ Enter the following:
 
 Click "Finish"
 
- 2) Modify
-  the StatusActivity layout
+ 2) Modify the default StatusActivity layout
 
-This screen will have four components:
+The modified screen will have four components:
 
 - A title at the top of the screen. This will be a TextView  widget.
 
@@ -97,6 +96,8 @@ This screen will have four components:
 - A layout to contain all these widgets and lay them out one after another in a vertical
 fashion. For this screen, we’ll use LinearLayout , one of the more common ones.
 
+  2.a) Modify the +res/layout/activity_status.xml+ file.
+  
 You can modify the XML layout file using the layout editor or by modifying the XML
 directly as shown below:
 
