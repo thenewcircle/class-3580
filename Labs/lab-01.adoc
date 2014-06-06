@@ -225,7 +225,8 @@ describes changes to "res/values" for
   styles
 
  5) Run the app.  The screen output should be similar to the following image:
- 
-image::images/lab-01-app.png[]
+
+.Figure 1. Status Screen 
+image::images/lab-01-app.png[width=200]
 
 
