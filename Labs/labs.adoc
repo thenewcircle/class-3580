@@ -11,7 +11,7 @@
 |06 |Create PrefsActivity and wire it to the app      |3    |Yamba-3, pg 141
 |07 |Add server and refresh interval to preferences   |3    |Yamba-4, pg 163 (ch 10 - services)
 |08 |Create Main activity                             |3    |pg 148, (menu pg 150)
-|09 |Add Action Bar Item                              |3    |pg 148
+|09 |Add Action Bar Item                              |3    |pg 148, sl 159
 |10 |Use static fragments                             |3    |
 |11 |Add Refresh button to Acton Bar                  |4    |
 |12 |Read Shared Prefs                                |4    |

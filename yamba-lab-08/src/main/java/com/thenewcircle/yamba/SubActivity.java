@@ -10,8 +10,6 @@ public class SubActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// Action bar stuff
-		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 	
 	@Override
