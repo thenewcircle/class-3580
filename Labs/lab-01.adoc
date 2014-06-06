@@ -143,9 +143,7 @@ directly as shown below:
 </LinearLayout>
 ----
 
-The text values in the layout have been externalized as string resources.
-
-Verify that they are included in the +strings.xml+ file
+  2.b) The text values in the layout should be externalized as string resources. Include them in the +strings.xml+ file
 
 [source, title=res/values/strings.xml]
 ----
@@ -159,19 +157,29 @@ Verify that they are included in the +strings.xml+ file
 </resources>
 ----
 
+ 3) Modify the +StatusActivity+ to listen for button events.
+
+
+
+<1> To make StatusActivity  capable of being a button listener, it needs to implement
+the OnClickListener  interface.
+
+<2> Find views inflated from the XML layout and assign them to Java variables.
+
+<3> Register the button to notify this  (i.e., StatusActivity ) when it gets clicked.
+
+<4> Connect to the online service that supports the Twitter API. At this point, we hardcode
+the username and password.
+
+<5> The method that is called when button is clicked, as part of the OnClickListener
+ interface.
+
+<6> Make the web service API call to the cloud to update our status.
+
+
 
 [source, java, title=StatusActivity.java]
 ----
-package com.thenewcircle.yamba;
-
-import winterwell.jtwitter.Twitter;
-import android.app.Activity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
 
 public class StatusActivity1 extends Activity implements OnClickListener { <1>
 
@@ -203,37 +211,19 @@ public class StatusActivity1 extends Activity implements OnClickListener { <1>
 }
 ----
 
-<1> To make StatusActivity  capable of being a button listener, it needs to implement
-the OnClickListener  interface.
+ 4) Include the necessary +jtwitter.jar+ library
 
-<2> Find views inflated from the XML layout and assign them to Java variables.
+  4.a) Create a new directory called "libs"
 
-<3> Register the button to notify this  (i.e., StatusActivity ) when it gets clicked.
+  4.b) Place +jtwitter.jar+ from the lab setup files into "libs"
 
-<4> Connect to the online service that supports the Twitter API. At this point, we hardcode
-the username and password.
-
-<5> The method that is called when button is clicked, as part of the OnClickListener
- interface.
-
-<6> Make the web service API call to the cloud to update our status.
-
-
-3) Add the +jtwitter.jar+ library
-
-Create a new directory called "libs"
-
-Place jtwitter.jar into "libs"
-
-Verify that the library is referened in the dependencies section of
-the +build.gradle+ file
+  4.c) Verify that the library is referened in the dependencies section of the +build.gradle+ file
 
 [source, title=build.gradle]
 ----
 <?xml version="1.0" encoding="utf-8"?>
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar']) <1>
-    compile 'com.android.support:appcompat-v7:19.+'
 }
 ----
 <1> Includes any jar file in the +libs+ directory.
@@ -244,10 +234,8 @@ describes changes to "res/values" for
   strings
   styles
 
-capture screen image
+ 5) Run the app.  The screen output should be similar to the following image:
+ 
 image::images/lab-01-app.png
 
 
-
-
---- the end ----
