@@ -365,345 +365,127 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 </div>
 <div id="content">
 <div class="paragraph">
-<p><strong>Lab 1.0 – Status Activity Layout</strong></p>
+<p><strong>Lab 4.0 – Add a Dialog while posting   </strong></p>
 </div>
 <div class="paragraph">
 <p><strong>Overview: </strong></p>
 </div>
 <div class="paragraph">
-<p>In this lab you will build a simple UI.</p>
-</div>
-<div class="paragraph">
-<p><strong>Setup:</strong></p>
-</div>
-<div class="paragraph">
-<p>Android Studio should be installed.</p>
+<p>In this lab you will create a task to post in the background, off the UI thread.
+You will also learn how to display a progress indicator while a long running task
+is executing so that the user knows that processing is occuring.</p>
 </div>
 <div class="paragraph">
 <p><strong>Steps</strong></p>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>1) Create a new Android Project in Android Studio</pre>
+<pre>.1)  Add the YambaClient jar to the project</pre>
 </div>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>1.a) From the Android Studio Welcome screen select "New Project"</pre>
+<pre>.a)  Copy +yambaclientlib.jar+ from the setup files to +&lt;module&gt;/libs+</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Enter the following values in the "New Project" wizard:</p>
-</div>
-<table class="tableblock frame-all grid-all" style="width:100%; ">
-<colgroup>
-<col style="width:50%;">
-<col style="width:50%;"> 
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Application Name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Yamba</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Module Name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">yamba</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Package Name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">com.thenewcircle.yamba</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Project Location</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;your directory&gt;/YambaProject</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum Required SDK</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">API 15</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Target SDK</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">API 19</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Compile With</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">API 19</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Language Level</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">7.0</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Theme</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Halo Light With Dark Action Bar</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Create custom launcher icon</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">unchecked</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Create activity</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">checked</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mark this project as library</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">unchecked</p></td>
-</tr>
-</tbody>
-</table>
-
-<div class="paragraph">
-<p>Click "Next"</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>1.b) Complete the 2nd screen of the New Project wizard.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Select "Blank Activity"</p>
-</div>
-<div class="paragraph">
-<p>Click "Next"</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>1.c) Complete the 3rd screen of the New Project wizard.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Enter the following:</p>
-</div>
-<table class="tableblock frame-all grid-all" style="width:100%; ">
-<colgroup>
-<col style="width:50%;">
-<col style="width:50%;"> 
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Activity Name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">StatusActivity</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Layout Name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">activity_status</p></td>
-</tr>
-</tbody>
-</table>
-
-<div class="paragraph">
-<p>Click "Finish"</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>2) Modify the default StatusActivity layout</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The modified screen will have four components:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>A title at the top of the screen. This will be a TextView  widget.</p>
-</li>
-<li>
-<p>A big text area to type our 140-character status update. We’ll use an EditText
-widget for this purpose.</p>
-</li>
-<li>
-<p>A button to click to update the status. This will be a Button  widget.</p>
-</li>
-<li>
-<p>A layout to contain all these widgets and lay them out one after another in a vertical
-fashion. For this screen, we’ll use LinearLayout , one of the more common ones.</p>
-<div class="literalblock">
-<div class="content">
-<pre>2.a) Modify the +res/layout/activity_status.xml+ file.</pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>You can modify the XML layout file using the layout editor or by modifying the XML
-directly as shown below:</p>
+<p>The following declaration in <code>build.gradle</code> automatically includes the jar file in the project.</p>
 </div>
 <div class="listingblock">
-<div class="title">res/layout.status.xml</div>
 <div class="content">
-<pre class="highlight"><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
-
-&lt;!-- Main Layout of Status Activity --&gt;
-&lt;LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"&gt;
-
-    &lt;!-- Title TextView--&gt;
-    &lt;TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="30sp"
-        android:layout_margin="10dp"
-        android:text="@string/titleStatus"/&gt;
-
-    &lt;!-- Status EditText --&gt;
-    &lt;EditText
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:hint="@string/hintText"
-        android:id="@+id/editText"
-        android:gravity="top|center_horizontal"&gt;
-    &lt;/EditText&gt;
-
-    &lt;!-- Update Button --&gt;
-    &lt;Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/buttonUpdate"
-        android:textSize="20sp"
-        android:id="@+id/buttonUpdate"&gt;
-    &lt;/Button&gt;
-
-&lt;/LinearLayout&gt;</code></pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>2.b) The text values in the layout should be externalized as string resources. Include them in the +strings.xml+ file</pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">res/values/strings.xml</div>
-<div class="content">
-<pre class="highlight"><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
-&lt;resources&gt;
-    &lt;string name="app_name"&gt;Yamba 1&lt;/string&gt;
-    &lt;string name="titleYamba"&gt;Yamba&lt;/string&gt;
-    &lt;string name="titleStatus"&gt;Status Update&lt;/string&gt;
-    &lt;string name="hintText"&gt;Please enter your 140-character status&lt;/string&gt;
-    &lt;string name="buttonUpdate"&gt;Update&lt;/string&gt;
-&lt;/resources&gt;</code></pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>3) Modify the +StatusActivity+ to listen for button events.</pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">StatusActivity.java</div>
-<div class="content">
-<pre class="highlight"><code class="java language-java">
-public class StatusActivity1 extends Activity implements OnClickListener { <b>(1)</b>
-
-    private static final String TAG = "StatusActivity";
-    EditText editText;
-    Button updateButton;
-    Twitter twitter;
-
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.status);
-
-        // Find views
-        editText = (EditText) findViewById(R.id.editText); <b>(2)</b>
-        updateButton = (Button) findViewById(R.id.buttonUpdate);
-
-        updateButton.setOnClickListener(this); <b>(3)</b>
-
-    }
-
-    // Called when button is clicked <b>(4)</b>
-    public void onClick(View v) {
-        Log.d(TAG, "onClicked");
-    }
+<pre class="highlight"><code>dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 }</code></pre>
 </div>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre> &lt;1&gt; To make StatusActivity  capable of being a button listener, it needs to implement
-the OnClickListener  interface.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>&lt;2&gt; Find views inflated from the XML layout and assign them to Java variables.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>&lt;3&gt; Register the button to notify this  (i.e., StatusActivity ) when it gets clicked.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>&lt;4&gt; The listener for button click.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>4) Include the necessary +jtwitter.jar+ library</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>4.a) Create a new directory called "libs"</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>4.b) Place +jtwitter.jar+ from the lab setup files into "libs"</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>4.c) Verify that the library is referened in the dependencies section of the +build.gradle+ file</pre>
+<pre>.2)   Create AsyncTask to post statups updates to the server</pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">build.gradle</div>
 <div class="content">
-<pre class="highlight"><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar']) <b>(1)</b>
+<pre class="highlight"><code>class PostTask extends AsyncTask&lt;String, Void, String&gt; {
+
+  	// Executes on a non-UI thread
+  	@Override
+  	protected String doInBackground(String... params) {
+    		try {
+    			SharedPreferences prefs = PreferenceManager
+    					.getDefaultSharedPreferences(StatusActivity.this);
+    			String username = prefs.getString("username", "");
+    			String password = prefs.getString("password", "");
+
+    			YambaClient cloud = new YambaClient(username, password);
+    			cloud.postStatus(params[0]);
+
+    			Log.d(TAG, "Successfully posted to the cloud: " + params[0]);
+    			return "Successfully posted";
+    		} catch (Exception e) {
+    			Log.e(TAG, "Failed to post to the cloud", e);
+    			e.printStackTrace();
+    			return "Failed to post";
+    		}
+  	}
+
 }</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<ol>
-<li>
-<p>Includes any jar file in the <code>libs</code> directory.</p>
-</li>
-</ol>
+<div class="literalblock">
+<div class="content">
+<pre>.3)   Add internet permissions.</pre>
 </div>
-<div class="paragraph">
-<p>describes changes to "res/values" for
-  dimens
-  strings
-  styles</p>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>5) Run the app.  The screen output should be similar to the following image:</pre>
+<pre>.a)  In +AndroidManifest.xml+ add the following code BEFORE the &lt;application&gt; element.</pre>
 </div>
 </div>
-<div class="imageblock">
+<div class="listingblock">
 <div class="content">
-<img src="images/lab-01-app.png" alt="lab 01 app">
+<pre class="highlight"><code>&lt;uses-permission android:name="android.permission.INTERNET" /&gt;</code></pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>.4)  Show a progress indicator while posting</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>.a)  Start the dialog before the post</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>private ProgressDialog progress;
+
+@Override
+protected void onPreExecute() {
+    progress = ProgressDialog.show(StatusActivity.this, "Posting", "Please wait...");
+    progress.setCancelable(true);
+}</code></pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>.b)  Stop the dialog after the post is complete</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>@Override
+protected void onPostExecute(String result) {
+    progress.dismiss();
+    if (this != null &amp;&amp; result != null)
+        Toast.makeText(StatusActivity.this, result, Toast.LENGTH_LONG).show();
+}</code></pre>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2014-06-05 23:00:56 CDT
+Last updated 2014-05-30 20:36:25 CDT
 </div>
 </div>
 </body>
