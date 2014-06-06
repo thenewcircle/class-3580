@@ -160,24 +160,6 @@ directly as shown below:
  3) Modify the +StatusActivity+ to listen for button events.
 
 
-
-<1> To make StatusActivity  capable of being a button listener, it needs to implement
-the OnClickListener  interface.
-
-<2> Find views inflated from the XML layout and assign them to Java variables.
-
-<3> Register the button to notify this  (i.e., StatusActivity ) when it gets clicked.
-
-<4> Connect to the online service that supports the Twitter API. At this point, we hardcode
-the username and password.
-
-<5> The method that is called when button is clicked, as part of the OnClickListener
- interface.
-
-<6> Make the web service API call to the cloud to update our status.
-
-
-
 [source, java, title=StatusActivity.java]
 ----
 
@@ -199,17 +181,25 @@ public class StatusActivity1 extends Activity implements OnClickListener { <1>
         updateButton = (Button) findViewById(R.id.buttonUpdate);
 
         updateButton.setOnClickListener(this); <3>
-        twitter = new Twitter("student", "password"); <4>
-        twitter.setAPIRootUrl("http://yamba.marakana.com/api");
+
     }
 
-    // Called when button is clicked <5>
+    // Called when button is clicked <4>
     public void onClick(View v) {
-        twitter.setStatus(editText.getText().toString()); <6>
         Log.d(TAG, "onClicked");
     }
 }
 ----
+ <1> To make StatusActivity  capable of being a button listener, it needs to implement
+the OnClickListener  interface.
+
+ <2> Find views inflated from the XML layout and assign them to Java variables.
+
+ <3> Register the button to notify this  (i.e., StatusActivity ) when it gets clicked.
+ 
+ <4> The listener for button click.
+
+
 
  4) Include the necessary +jtwitter.jar+ library
 
