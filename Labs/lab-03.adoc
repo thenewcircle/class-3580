@@ -2,11 +2,61 @@
 
 **Overview: **
 
-In this lab you will create a layout to be used when the device is in landscape mode.
+In this lab you add code to handle a UI event. As the user enters text for their update, the
+activity should display the number of characters left to use (updates are a maximum of 140 characters).
 
 **Steps**
 
- .1) Add a TextView with id text_count to status activity. (hint: don’t forget to update landscape layout as well!).
+ .1) Add a handler for the "Tweet" button.
+
+When the user presses the "Tweet" button, write a message to the log file.
+
+ .1a) Create an +onClick+ method to handle the button press.  The method should
+ take a +View+ as an arguement.
+
+[source]
+----
+private static final String TAG = StatusActivity.class.getSimpleName();
+
+public void onClick(View v) {
+    Log.d(TAG, "Button Clicked");
+}
+----
+
+ .1b) Add an +onClick+ attribute to the status activity layout in the <Button> element.
+
+[source]
+----
+android:onClick="onClick"
+----
+
+The value of the attribute must correspond to the name of the method in the activity.
+
+Run the app and verify that the onClick listener is being called.
+
+ .1c) Implement the +onClick+ listener in +StatusActivity.java+.
+
+[source]
+----
+public class StatusActivity extends Activity implements OnClickListener {
+----
+
+ .1d) Assign the onClick Listener to the button
+
+[source]
+----
+// Find Button object
+Button myButton = (Button) findViewById(R.id.status_button_tweet);
+
+// Register activity as click listener
+myButton.setOnClickListener(this);
+----
+
+Note:  Remove the +onClick+ attribute in "status_activity.xml".  It is now redundant.
+
+ .2) Add a TextView with id +status_text_count+ to activity layout. This will be in file +res/layout/activity_status.xml+
+
+Hint: don’t forget to update landscape layout as well!
 
 [source]
 ----
@@ -20,7 +70,7 @@ In this lab you will create a layout to be used when the device is in landscape 
     android:text="140" />
 ----
 
- .2) Add a TextWatcher listener to editStatus and update textCount as user types.
+ .3) Add a TextWatcher listener to the status text field and update textCount as the user types.
 
 [source]
 ----
@@ -32,12 +82,6 @@ mTextStatus.addTextChangedListener(new TextWatcher() {
   	public void afterTextChanged(Editable s) {
     		int count = 140 - s.length();
     		mTextCount.setText(Integer.toString(count));
-
-    		if (count < 50) {
-    			mTextCount.setTextColor(Color.RED);
-    		} else {
-    			mTextCount.setTextColor(mDefaultColor);
-    		}
   	}
 
   	@Override
@@ -51,19 +95,18 @@ mTextStatus.addTextChangedListener(new TextWatcher() {
 });
 ----
 
- .3) Tell user how many characters are left, assuming we have 140 total.
+Question 1: Is it necessary to provide overrides for +beforeTextChanged+ and
++onTextChanged+ since they have no code?
+
+Question 2: Should the code be added to +onTextChanged+ instead of +afterTextChanged+?
+
+ .4) If the update exceeds 140 characters then make the count red as a warning.
 
 [source]
 ----
-@Override
-public void afterTextChanged(Editable s) {
-    int count = 140 - s.length();
-    mTextCount.setText(Integer.toString(count));
-
-    if (count < 50) {
-      mTextCount.setTextColor(Color.RED);
-    } else {
-      mTextCount.setTextColor(mDefaultColor);
-    }
-}
+ if (count < 50) {
+   mTextCount.setTextColor(Color.RED);
+ } else {
+   mTextCount.setTextColor(mDefaultColor);
+ }
 ----

@@ -8,7 +8,8 @@ import android.widget.TextView;
 
 public class StatusActivity extends Activity {
 
-	private Button mButtonTweet;
+    private static final String TAG = StatusActivity.class.getSimpleName();
+    private Button mButtonTweet;
 	private EditText mTextStatus;
 	private TextView mTextCount;
 	private int mDefaultColor;

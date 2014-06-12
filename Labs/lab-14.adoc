@@ -1,0 +1,299 @@
+**Lab 14.0 – Create A Timeline Fragment  **
+
+**Overview: **
+
+In this lab you will create a Timeline fragment which will display a list of posts.
+
+**Steps**
+
+ 1.) Extend ListFragment.
+
+ 1a.)  Create the +TimeLineFragment+ by extending +ListFragment+
+
+ [source]
+ ----
+ public class TimelineFragment extends ListFragment
+ ----
+
+ 2.) Create List Item Layout.
+
+Create the layout for an individual item in the list.  Each row in the list should
+display data from a +YambaClient.Status+ object which can contain the following
+properties
+
+  - createdAt
+  - message
+  - user
+  - id
+
+Following is an example layout:
+
+[source,title="res/layout/list_item.xml"]
+----
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:id="@+id/list_item_content"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:descendantFocusability="blocksDescendants"
+     android:paddingBottom="@dimen/activity_vertical_margin"
+     android:paddingLeft="@dimen/activity_horizontal_margin"
+     android:paddingRight="@dimen/activity_horizontal_margin"
+     android:paddingTop="@dimen/activity_vertical_margin" >
+
+     <TextView
+         android:id="@+id/list_item_text_user"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentTop="true"
+         android:text="Slashdot"
+         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+     <TextView
+         android:id="@+id/list_item_text_created_at"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBaseline="@+id/list_item_text_user"
+         android:layout_alignBottom="@+id/list_item_text_user"
+         android:layout_alignParentRight="true"
+         android:text="10 minutes ago"
+         android:textAppearance="?android:attr/textAppearanceSmall"
+         android:textColor="@android:color/secondary_text_light" />
+
+     <TextView
+         android:id="@+id/list_item_text_message"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@+id/list_item_text_created_at"
+         android:autoLink="web"
+         android:focusable="false"
+         android:linksClickable="true"
+         android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</RelativeLayout>
+----
+
+ 3.) Create the adaptor and binder for the ListView
+
+ 3a)  Create a new +ViewBinder+
+
+The ViewBinder allows us to attach business logic to the mapping performed by the adapter
+as it updates the views from the cursor.
+
+	private static final ViewBinder VIEW_BINDER = new ViewBinder() {
+
+		@Override
+		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+			long timestamp;
+
+			// Custom binding
+			switch (view.getId()) {
+			case R.id.list_item_text_created_at:
+				timestamp = cursor.getLong(columnIndex);
+				CharSequence relTime = DateUtils
+						.getRelativeTimeSpanString(timestamp);
+				((TextView) view).setText(relTime);
+				return true;
+			case R.id.list_item_freshness:
+				timestamp = cursor.getLong(columnIndex);
+				((FreshnessView) view).setTimestamp(timestamp);
+				return true;
+			default:
+				return false;
+			}
+		}
+	};
+
+ 3b.) Create the adaptor for the ListView
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_item, null, FROM, TO, 0);
+		mAdapter.setViewBinder(VIEW_BINDER);
+
+		setListAdapter(mAdapter);
+
+	}
+
+
+ 4.) Implement the Loader callback
+
+ 4a.) The TimelineFragment should implement +LoaderCallbacks<Cursor>+.  Override
+the methods for the required callbacks.
+
+ [source]
+ ----
+ 	// Executed on a non-UI thread
+ 	@Override
+ 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+ 		if (id != LOADER_ID)
+ 			return null;
+ 		Log.d(TAG, "onCreateLoader");
+
+ 		return new CursorLoader(getActivity(), StatusContract.CONTENT_URI,
+ 				null, null, null, StatusContract.DEFAULT_SORT);
+ 	}
+
+ 	@Override
+ 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+ 		// Get the details fragment
+ 		DetailsFragment fragment = (DetailsFragment) getFragmentManager()
+ 				.findFragmentById(R.id.fragment_details);
+
+ 		// Is details fragment visible?
+ 		if (fragment != null && fragment.isVisible() && cursor.getCount() == 0) {
+ 			fragment.updateView(-1);
+ 			Toast.makeText(getActivity(), "No data", Toast.LENGTH_LONG).show();
+ 		}
+
+ 		Log.d(TAG, "onLoadFinished with cursor: " + cursor.getCount());
+ 		mAdapter.swapCursor(cursor);
+ 	}
+
+ 	@Override
+ 	public void onLoaderReset(Loader<Cursor> loader) {
+ 		mAdapter.swapCursor(null);
+ 	}
+ }
+ ----
+
+ 4b.) Initialize the loader manager in +onActivityCreated+
+
+[source]
+----
+getLoaderManager().initLoader(LOADER_ID, null, this);
+----
+
+ 5.) Start the +TimelineFragment+ in +MainActivity+
+
+ 5a) Create a layout for +MainActivity+ named +activity_main.xml+ which
+will "statically" create the +TimelineFragment+
+
+[source, title="res/layout/activity_main.xml"]
+----
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:tools="http://schemas.android.com/tools"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:paddingBottom="@dimen/activity_vertical_margin"
+     android:paddingLeft="@dimen/activity_horizontal_margin"
+     android:paddingRight="@dimen/activity_horizontal_margin"
+     android:paddingTop="@dimen/activity_vertical_margin"
+     tools:context=".MainActivity" >
+
+     <fragment
+         android:id="@+id/fragment_timeline"
+         android:name="com.thenewcircle.yamba.TimelineFragment"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
+----
+
+ 5b) Inflate the +activity_main+ layout in +MainActivity+
+
+[source]
+----
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+   super.onCreate(savedInstanceState);
+   setContentView(R.layout.activity_main);
+}
+----
+
+ 5.) Run and verify
+
+Spoiler:  Here is a complete listing of the code for the TimelineFragment:
+
+
+[source]
+----
+public class TimelineFragment extends ListFragment implements LoaderCallbacks<Cursor> {
+
+	private static final String TAG = TimelineFragment.class.getSimpleName();
+	private static final String[] FROM = { StatusContract.Column.USER,
+			StatusContract.Column.MESSAGE, StatusContract.Column.CREATED_AT,
+			StatusContract.Column.CREATED_AT };
+	private static final int[] TO = { R.id.list_item_text_user,
+			R.id.list_item_text_message, R.id.list_item_text_created_at,
+			R.id.list_item_freshness };
+	private static final int LOADER_ID = 42;
+	private SimpleCursorAdapter mAdapter;
+
+	private static final ViewBinder VIEW_BINDER = new ViewBinder() {
+
+		@Override
+		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+			long timestamp;
+
+			// Custom binding
+			switch (view.getId()) {
+			case R.id.list_item_text_created_at:
+				timestamp = cursor.getLong(columnIndex);
+				CharSequence relTime = DateUtils
+						.getRelativeTimeSpanString(timestamp);
+				((TextView) view).setText(relTime);
+				return true;
+			default:
+				return false;
+			}
+		}
+	};
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_item,
+				null, FROM, TO, 0);
+		mAdapter.setViewBinder(VIEW_BINDER);
+
+		setListAdapter(mAdapter);
+
+		getLoaderManager().initLoader(LOADER_ID, null, this);
+	}
+
+	// --- Loader Callbacks ---
+
+	// Executed on a non-UI thread
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		if (id != LOADER_ID)
+			return null;
+		Log.d(TAG, "onCreateLoader");
+
+		return new CursorLoader(getActivity(), StatusContract.CONTENT_URI,
+				null, null, null, StatusContract.DEFAULT_SORT);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		// Get the details fragment
+		DetailsFragment fragment = (DetailsFragment) getFragmentManager()
+				.findFragmentById(R.id.fragment_details);
+
+		// Is details fragment visible?
+		if (fragment != null && fragment.isVisible() && cursor.getCount() == 0) {
+			fragment.updateView(-1);
+			Toast.makeText(getActivity(), "No data", Toast.LENGTH_LONG).show();
+		}
+
+		Log.d(TAG, "onLoadFinished with cursor: " + cursor.getCount());
+		mAdapter.swapCursor(cursor);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		mAdapter.swapCursor(null);
+	}
+}
+----
+
+
+
+

@@ -1,0 +1,89 @@
+**Lab 4.0 – Add a Dialog while posting   **
+
+**Overview: **
+
+In this lab you will create a task to post in the background, off the UI thread.
+You will also learn how to display a progress indicator while a long running task
+is executing so that the user knows that processing is occuring.
+
+
+**Steps**
+
+ .1)  Add the YambaClient jar to the project
+
+ .a)  Copy +yambaclientlib.jar+ from the setup files to +<module>/libs+
+
+The following declaration in +build.gradle+ automatically includes the jar file in the project.
+
+[source]
+----
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+----
+
+ .2)   Create AsyncTask to post statups updates to the server
+
+[source]
+----
+class PostTask extends AsyncTask<String, Void, String> {
+
+  	// Executes on a non-UI thread
+  	@Override
+  	protected String doInBackground(String... params) {
+    		try {
+    			SharedPreferences prefs = PreferenceManager
+    					.getDefaultSharedPreferences(StatusActivity.this);
+    			String username = prefs.getString("username", "");
+    			String password = prefs.getString("password", "");
+
+    			YambaClient cloud = new YambaClient(username, password);
+    			cloud.postStatus(params[0]);
+
+    			Log.d(TAG, "Successfully posted to the cloud: " + params[0]);
+    			return "Successfully posted";
+    		} catch (Exception e) {
+    			Log.e(TAG, "Failed to post to the cloud", e);
+    			e.printStackTrace();
+    			return "Failed to post";
+    		}
+  	}
+
+}
+----
+
+ .3)   Add internet permissions.
+
+ .a)  In +AndroidManifest.xml+ add the following code BEFORE the <application> element.
+
+[source]
+----
+<uses-permission android:name="android.permission.INTERNET" />
+----
+
+ .4)  Show a progress indicator while posting
+
+  .a)  Start the dialog before the post
+
+[source]
+----
+private ProgressDialog progress;
+
+@Override
+protected void onPreExecute() {
+    progress = ProgressDialog.show(StatusActivity.this, "Posting", "Please wait...");
+    progress.setCancelable(true);
+}
+----
+
+  .b)  Stop the dialog after the post is complete
+
+[source]
+----
+@Override
+protected void onPostExecute(String result) {
+    progress.dismiss();
+    if (this != null && result != null)
+        Toast.makeText(StatusActivity.this, result, Toast.LENGTH_LONG).show();
+}
+----

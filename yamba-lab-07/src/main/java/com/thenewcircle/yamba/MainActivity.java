@@ -1,4 +1,4 @@
-package com.marakana.android.yamba;
+package com.thenewcircle.yamba;
 
 import android.app.Activity;
 import android.content.Intent;

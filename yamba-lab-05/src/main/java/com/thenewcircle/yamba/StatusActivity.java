@@ -8,6 +8,7 @@ public class StatusActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         // Check if this activity was created before
         if (savedInstanceState == null) {
@@ -15,7 +16,7 @@ public class StatusActivity extends Activity {
             StatusFragment fragment = new StatusFragment();
             getFragmentManager()
                     .beginTransaction()
-                    .add(android.R.id.content, fragment,
+                    .add(R.id.container, fragment,
                             fragment.getClass().getSimpleName()).commit();
         }
     }

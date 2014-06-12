@@ -2,7 +2,8 @@
 
 **Overview: **
 
-In this lab you will ...
+In this lab you will add an additional preference using ListPreferences
+and arrays.
 
 **Steps**
 

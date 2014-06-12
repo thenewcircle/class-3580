@@ -61,7 +61,7 @@ Click "Next"
 
   1.b) Complete the 2nd screen of the New Project wizard.
 
-Select "Blank Activity"
+Select "Empty Activity"
 
 Click "Next"
 
@@ -82,11 +82,9 @@ Enter the following:
 
 Click "Finish"
 
- 2) Modify the default StatusActivity layout
+ 2) Modify the default layout
 
-The modified screen will have four components:
-
-- A title at the top of the screen. This will be a TextView  widget.
+The modified screen will have three components:
 
 - A big text area to type our 140-character status update. We’ll use an EditText
  widget for this purpose.
@@ -95,6 +93,7 @@ The modified screen will have four components:
 
 - A layout to contain all these widgets and lay them out one after another in a vertical
 fashion. For this screen, we’ll use LinearLayout , one of the more common ones.
+
 
   2.a) Modify the +res/layout/activity_status.xml+ file.
   
@@ -157,74 +156,72 @@ directly as shown below:
 </resources>
 ----
 
- 3) Modify the +StatusActivity+ to listen for button events.
+
+  3.) Configure an emulator and start it
+
+Tools -> Android -> AVD Manager
+
+Click “New”
+
+Following are the suggested configuration options for creating your
+virtual device:
+
+[cols="2*", width=50%]
+|===
+
+|AVD Name 
+|android44
+
+|Device 
+|Nexus 4
+
+|Target 
+|Android 4.4
+
+|CPU/ABI
+|blank
+
+|Keyboard 
+|checked
+
+|Skin 
+|checked
+
+|Front Camera 
+|None
+
+|Back Camera 
+|None
+
+|Memory Options 
+|Ram: 1024, VM Heap: 32
+
+|Internal Storage 
+|200 MiB
+
+|SD Card
+|blank
+
+|Emulation Options
+|blank
+
+|===
+
+Click "OK"
+
+Select "android44"
+
+Click “Start”
+
+On "Launch Options" leave defaults
+
+Click "Launch"
+
+Note:  In Windows the emulator may take 3 to 5 minutes to fully start. 
+Wait for the home page on the emulator to appear to confirm that it has started.
 
 
-[source, java, title=StatusActivity.java]
-----
-
-public class StatusActivity1 extends Activity implements OnClickListener { <1>
-
-    private static final String TAG = "StatusActivity";
-    EditText editText;
-    Button updateButton;
-    Twitter twitter;
-
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.status);
-
-        // Find views
-        editText = (EditText) findViewById(R.id.editText); <2>
-        updateButton = (Button) findViewById(R.id.buttonUpdate);
-
-        updateButton.setOnClickListener(this); <3>
-
-    }
-
-    // Called when button is clicked <4>
-    public void onClick(View v) {
-        Log.d(TAG, "onClicked");
-    }
-}
-----
- <1> To make StatusActivity  capable of being a button listener, it needs to implement
-the OnClickListener  interface.
-
- <2> Find views inflated from the XML layout and assign them to Java variables.
-
- <3> Register the button to notify this  (i.e., StatusActivity ) when it gets clicked.
- 
- <4> The listener for button click.
-
-
-
- 4) Include the necessary +jtwitter.jar+ library
-
-  4.a) Create a new directory called "libs"
-
-  4.b) Place +jtwitter.jar+ from the lab setup files into "libs"
-
-  4.c) Verify that the library is referened in the dependencies section of the +build.gradle+ file
-
-[source, title=build.gradle]
-----
-<?xml version="1.0" encoding="utf-8"?>
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar']) <1>
-}
-----
-<1> Includes any jar file in the +libs+ directory.
-
-
-describes changes to "res/values" for
-  dimens
-  strings
-  styles
-
- 5) Run the app.  The screen output should be similar to the following image:
+ 4) Run the app.  The screen output should be similar to the following image:
 
 .Status Activity Screen 
 image::images/lab-01-app.png[width=400]

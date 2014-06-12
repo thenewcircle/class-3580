@@ -1,0 +1,145 @@
+**Lab AT – AsyncTask  **
+
+**Overview: **
+
+In this lab you will use the AsyncTask class to move processing off the main thread.
+
+**Steps**
+
+ .1) Implement the posting logic.  When the user presses the "Tweet" button,
+ post the text to the Yamba server.
+
+ .1a) Create an +postTweet+ method to handle the post.  The method should
+ take a +String+ as an arguement and return a +String+ which is the result of the post.
+
+[source]
+----
+public String postTweet(String tweet) {
+
+    YambaClient yambaClient;
+
+    YambaClient yambaCloud = new YambaClient("student", "password");
+    try {
+        yambaCloud.postStatus(tweet);
+        return "succuess";
+    } catch (
+        YambaClientException e) {
+        e.printStackTrace();
+        return "failure";
+    }
+}
+----
+
+ .1b) Modify the +setOnClickListener+ to get the text for the tweet and post it.
+
+[source]
+----
+mButtonTweet.setOnClickListener(new View.OnClickListener() {
+   @Override
+   public void onClick(View v) {
+       String tweet = mTextStatus.getText().toString();
+       String result = postTweet(tweet);
+
+       // show the result of the post
+       Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+   }
+});
+----
+
+Note: Running the app now will result is a permissions error when trying
+to reach the internet.  Run the app and look for the error in the log.
+
+
+ .1c) Add internet permission to the manifest.  The following code should be
+ placed in +AndroidManifest.xml+ BEFORE the <appliction> element.
+
+[source]
+----
+<uses-permission android:name="android.permission.INTERNET" />
+----
+
+Note: Run the app and it still won't work.  This is because Android's StrictMode
+policy has been violated.  Review the log to see the error message.
+
+ .1d) Turn off StrictMode by adding the following code to the +onCreateView+ method.
+
+[source]
+----
+     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+     StrictMode.setThreadPolicy(policy);
+----
+
+Note: Turning off StrictMode is NOT the correct approach. We're just doing it for demonstration purposes.
+
+ .1e)  Run the app and your tweet should now post.  Verify this by checking the server
+ at http://yamba.marakana.com
+
+
+ .2) Convert the postTweet() method into an AsyncTasks
+
+ .2a) Create a new class called +PostTask+ by extending +AsyncTask+.  This
+class should be defined as an inner class inside +StatusFragment+
+
+[source]
+----
+class PostTask extends AsyncTask<String, Void, String> {
+
+   // Executes on a non-UI thread
+   @Override
+   protected String doInBackground(String... params) {
+      String tweet = params[0];
+        String result = postTweet(tweet);
+        return result;
+   }
+
+   public String postTweet(String tweet) {
+       YambaClient yambaClient = new YambaClient("student", "password");
+       try {
+           yambaClient.postStatus(tweet);
+           return "succuess";
+       } catch (
+           YambaClientException e) {
+           e.printStackTrace();
+           return "failure";
+       }
+   }
+
+}
+----
+
+ .2b) Show a progress dialog while the tweet is being posted to the server.
+
+[source]
+----
+private ProgressDialog progress;
+
+@Override
+protected void onPreExecute() {
+   progress = ProgressDialog.show(getActivity(), "Posting", "Please wait...");
+   progress.setCancelable(true);
+}
+
+@Override
+protected void onPostExecute(String result) {
+   progress.dismiss();
+   // show the result of the post
+   Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+}
+----
+
+ .2c) Modify the button handler to call the AsyncTask.  You can remove
+ the StrictMode policy change.  Also remove the +postTweet+ method
+ from the +StatusFragment+
+
+[source]
+----
+mButtonTweet.setOnClickListener(new View.OnClickListener() {
+   @Override
+   public void onClick(View v) {
+      PostTask postTask = new PostTask();
+      postTask.execute(status);
+   }
+});
+----
+
+Optional: How would you refactor +PostTask+ into its own class?

@@ -1,3 +1,4 @@
+include ':fragment'
 include ':yamba-lab-01'
 include ':yamba-lab-02'
 include ':yamba-lab-03'
@@ -6,4 +7,7 @@ include ':yamba-lab-05'
 include ':yamba-lab-06'
 include ':yamba-lab-07'
 include ':yamba-lab-08'
+include ':yamba-lab-09'
 
+include ':yamba-lab-11'
+include ':yamba-lab-final'

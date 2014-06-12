@@ -1,15 +1,9 @@
 package com.thenewcircle.yamba;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,18 +13,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.marakana.android.yamba.clientlib.YambaClient;
 
 public class StatusFragment extends Fragment {
 	private static final String TAG = StatusFragment.class.getSimpleName();
-	private Button mButtonTweet;
+    private Button mButtonTweet;
 	private EditText mTextStatus;
 	private TextView mTextCount;
 	private int mDefaultColor;
+    PostTask postTask;
 
-	@Override
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_status, null, false);
@@ -45,10 +37,12 @@ public class StatusFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				String status = mTextStatus.getText().toString();
-				PostTask postTask = new PostTask();
-				postTask.execute(status);
-				Log.d(TAG, "onClicked");
+                if (postTask != null) {
+                    String status = mTextStatus.getText().toString();
+                    postTask = new PostTask(getActivity());
+                    postTask.execute(status);
+                    Log.d(TAG, "onClicked");
+                }
 			}
 
 		});
@@ -84,54 +78,11 @@ public class StatusFragment extends Fragment {
 		return v;
 	}
 
-	class PostTask extends AsyncTask<String, Void, String> {
-		private ProgressDialog progress;
-
-		@Override
-		protected void onPreExecute() {
-			progress = ProgressDialog.show(getActivity(), "Posting",
-					"Please wait...");
-			progress.setCancelable(true);
-		}
-
-		// Executes on a non-UI thread
-		@Override
-		protected String doInBackground(String... params) {
-			try {
-				SharedPreferences prefs = PreferenceManager
-						.getDefaultSharedPreferences(getActivity());
-				String username = prefs.getString("username", "");
-				String password = prefs.getString("password", "");
-
-				// Check that username and password are not empty
-				// If empty, Toast a message to set login info and bounce to
-				// SettingActivity
-				// Hint: TextUtils.
-				if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
-					getActivity().startActivity(
-							new Intent(getActivity(), SettingsActivity.class));
-					return "Please update your username and password";
-				}
-
-				YambaClient cloud = new YambaClient(username, password);
-				cloud.postStatus(params[0]);
-
-				Log.d(TAG, "Successfully posted to the cloud: " + params[0]);
-				return "Successfully posted";
-			} catch (Exception e) {
-				Log.e(TAG, "Failed to post to the cloud", e);
-				e.printStackTrace();
-				return "Failed to post";
-			}
-		}
-
-		// Called after doInBackground() on UI thread
-		@Override
-		protected void onPostExecute(String result) {
-			progress.dismiss();
-			if (getActivity() != null && result != null)
-				Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
-		}
-
-	}
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (postTask != null) {
+            postTask.cancel(true);
+        }
+    }
 }

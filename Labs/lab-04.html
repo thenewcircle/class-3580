@@ -365,90 +365,21 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 </div>
 <div id="content">
 <div class="paragraph">
-<p><strong>Lab 4.0 – Add a Dialog while posting   </strong></p>
+<p><strong>Lab 4.0 – Add a Progress Dialog  </strong></p>
 </div>
 <div class="paragraph">
 <p><strong>Overview: </strong></p>
 </div>
 <div class="paragraph">
-<p>In this lab you will create a task to post in the background, off the UI thread.
-You will also learn how to display a progress indicator while a long running task
-is executing so that the user knows that processing is occuring.</p>
+<p>In this lab you will write code to display a progress indicator that will appear while a
+long running task is executing.</p>
 </div>
 <div class="paragraph">
 <p><strong>Steps</strong></p>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>.1)  Add the YambaClient jar to the project</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>.a)  Copy +yambaclientlib.jar+ from the setup files to +&lt;module&gt;/libs+</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The following declaration in <code>build.gradle</code> automatically includes the jar file in the project.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-}</code></pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>.2)   Create AsyncTask to post statups updates to the server</pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>class PostTask extends AsyncTask&lt;String, Void, String&gt; {
-
-  	// Executes on a non-UI thread
-  	@Override
-  	protected String doInBackground(String... params) {
-    		try {
-    			SharedPreferences prefs = PreferenceManager
-    					.getDefaultSharedPreferences(StatusActivity.this);
-    			String username = prefs.getString("username", "");
-    			String password = prefs.getString("password", "");
-
-    			YambaClient cloud = new YambaClient(username, password);
-    			cloud.postStatus(params[0]);
-
-    			Log.d(TAG, "Successfully posted to the cloud: " + params[0]);
-    			return "Successfully posted";
-    		} catch (Exception e) {
-    			Log.e(TAG, "Failed to post to the cloud", e);
-    			e.printStackTrace();
-    			return "Failed to post";
-    		}
-  	}
-
-}</code></pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>.3)   Add internet permissions.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>.a)  In +AndroidManifest.xml+ add the following code BEFORE the &lt;application&gt; element.</pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code>&lt;uses-permission android:name="android.permission.INTERNET" /&gt;</code></pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>.4)  Show a progress indicator while posting</pre>
+<pre>.1)  Show a progress indicator during a long running tasks</pre>
 </div>
 </div>
 <div class="literalblock">
@@ -458,34 +389,37 @@ is executing so that the user knows that processing is occuring.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>private ProgressDialog progress;
+<pre class="highlight"><code>ProgressDialog progress;
 
-@Override
-protected void onPreExecute() {
-    progress = ProgressDialog.show(StatusActivity.this, "Posting", "Please wait...");
-    progress.setCancelable(true);
+progress = ProgressDialog.show(StatusActivity.this, "Processing", "Please wait...");
+progress.setCancelable(true);</code></pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>.b)  Simulate a long running tasks by having the thread pause for 3 seconds.</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>Thread.sleep(3000);
 }</code></pre>
 </div>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>.b)  Stop the dialog after the post is complete</pre>
+<pre>.c)  Stop the dialog after the post is complete</pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>@Override
-protected void onPostExecute(String result) {
-    progress.dismiss();
-    if (this != null &amp;&amp; result != null)
-        Toast.makeText(StatusActivity.this, result, Toast.LENGTH_LONG).show();
-}</code></pre>
+<pre class="highlight"><code>progress.dismiss();</code></pre>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2014-05-30 20:36:25 CDT
+Last updated 2014-06-08 17:27:37 PDT
 </div>
 </div>
 </body>

@@ -461,7 +461,7 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 </div>
 </div>
 <div class="paragraph">
-<p>Select "Blank Activity"</p>
+<p>Select "Empty Activity"</p>
 </div>
 <div class="paragraph">
 <p>Click "Next"</p>
@@ -496,17 +496,14 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>2) Modify the default StatusActivity layout</pre>
+<pre>2) Modify the default layout</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The modified screen will have four components:</p>
+<p>The modified screen will have three components:</p>
 </div>
 <div class="ulist">
 <ul>
-<li>
-<p>A title at the top of the screen. This will be a TextView  widget.</p>
-</li>
 <li>
 <p>A big text area to type our 140-character status update. We’ll use an EditText
 widget for this purpose.</p>
@@ -592,118 +589,110 @@ directly as shown below:</p>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>3) Modify the +StatusActivity+ to listen for button events.</pre>
+<pre>3.) Configure an emulator and start it</pre>
 </div>
-</div>
-<div class="listingblock">
-<div class="title">StatusActivity.java</div>
-<div class="content">
-<pre class="highlight"><code class="java language-java">
-public class StatusActivity1 extends Activity implements OnClickListener { <b>(1)</b>
-
-    private static final String TAG = "StatusActivity";
-    EditText editText;
-    Button updateButton;
-    Twitter twitter;
-
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.status);
-
-        // Find views
-        editText = (EditText) findViewById(R.id.editText); <b>(2)</b>
-        updateButton = (Button) findViewById(R.id.buttonUpdate);
-
-        updateButton.setOnClickListener(this); <b>(3)</b>
-
-    }
-
-    // Called when button is clicked <b>(4)</b>
-    public void onClick(View v) {
-        Log.d(TAG, "onClicked");
-    }
-}</code></pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre> &lt;1&gt; To make StatusActivity  capable of being a button listener, it needs to implement
-the OnClickListener  interface.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>&lt;2&gt; Find views inflated from the XML layout and assign them to Java variables.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>&lt;3&gt; Register the button to notify this  (i.e., StatusActivity ) when it gets clicked.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>&lt;4&gt; The listener for button click.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>4) Include the necessary +jtwitter.jar+ library</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>4.a) Create a new directory called "libs"</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>4.b) Place +jtwitter.jar+ from the lab setup files into "libs"</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>4.c) Verify that the library is referened in the dependencies section of the +build.gradle+ file</pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">build.gradle</div>
-<div class="content">
-<pre class="highlight"><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar']) <b>(1)</b>
-}</code></pre>
-</div>
-</div>
-<div class="colist arabic">
-<ol>
-<li>
-<p>Includes any jar file in the <code>libs</code> directory.</p>
-</li>
-</ol>
 </div>
 <div class="paragraph">
-<p>describes changes to "res/values" for
-  dimens
-  strings
-  styles</p>
+<p>Tools &#8594; Android &#8594; AVD Manager</p>
+</div>
+<div class="paragraph">
+<p>Click “New”</p>
+</div>
+<div class="paragraph">
+<p>Following are the suggested configuration options for creating your
+virtual device:</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width:50%; ">
+<colgroup>
+<col style="width:50%;">
+<col style="width:50%;"> 
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AVD Name </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">android44</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Device </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nexus 4</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Target </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Android 4.4</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU/ABI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">blank</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keyboard </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">checked</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Skin </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">checked</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Front Camera </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Back Camera </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Memory Options </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ram: 1024, VM Heap: 32</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Internal Storage </p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">200 MiB</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SD Card</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">blank</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Emulation Options</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">blank</p></td>
+</tr>
+</tbody>
+</table>
+
+<div class="paragraph">
+<p>Click "OK"</p>
+</div>
+<div class="paragraph">
+<p>Select "android44"</p>
+</div>
+<div class="paragraph">
+<p>Click “Start”</p>
+</div>
+<div class="paragraph">
+<p>On "Launch Options" leave defaults</p>
+</div>
+<div class="paragraph">
+<p>Click "Launch"</p>
+</div>
+<div class="paragraph">
+<p>Note:  In Windows the emulator may take 3 to 5 minutes to fully start. 
+Wait for the home page on the emulator to appear to confirm that it has started.</p>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>5) Run the app.  The screen output should be similar to the following image:</pre>
+<pre>4) Run the app.  The screen output should be similar to the following image:</pre>
 </div>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/lab-01-app.png" alt="lab 01 app">
+<img src="images/lab-01-app.png" alt="lab 01 app" width="400">
 </div>
+<div class="title">Figure 1. Status Activity Screen</div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2014-06-05 23:00:56 CDT
+Last updated 2014-06-09 21:15:02 PDT
 </div>
 </div>
 </body>

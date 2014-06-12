@@ -3,21 +3,19 @@ package com.thenewcircle.yamba;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.LogPrinter;
+import android.util.Printer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.marakana.android.yamba.clientlib.YambaClient;
 
 public class StatusActivity extends Activity {
     private static final String TAG = StatusActivity.class.getSimpleName();
@@ -25,6 +23,7 @@ public class StatusActivity extends Activity {
     private EditText mTextStatus;
     private TextView mTextCount;
     private int mDefaultColor;
+    final Activity me = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +36,39 @@ public class StatusActivity extends Activity {
         mTextCount.setText(Integer.toString(140));
         mDefaultColor = mTextCount.getTextColors().getDefaultColor();
 
+        //final Activity me = this;
+
         mButtonTweet.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                String status = mTextStatus.getText().toString();
-                PostTask postTask = new PostTask();
-                postTask.execute(status);
-                Log.d(TAG, "onClicked");
+
+                ProgressDialog progress = new ProgressDialog(me);
+                progress.setTitle("Processing");
+                progress.setMessage("Please wait...");
+                progress.setCancelable(true);
+                progress.show();
+
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                //progress.dismiss();
+
+
+                Handler handler = new Handler();
+
+                handler.postAtFrontOfQueue(new Runnable() {
+                    public void run() {
+                        showProgressDialog();
+                    }
+                });
+
+                //showProgressDialog(me);
+
             }
+
 
         });
 
@@ -76,49 +99,37 @@ public class StatusActivity extends Activity {
         });
 
         Log.d(TAG, "onCreated");
+
+//        ProgressDialog progress = new ProgressDialog(StatusActivity.this);
+//        progress.setTitle("Processing");
+//        progress.setMessage("Please wait...");
+//        progress.setCancelable(true);
+//        progress.show();
+
+        Looper looper = Looper.getMainLooper();
+        if (Looper.getMainLooper() == Looper.myLooper()) {
+            Log.d(TAG, "This is the main looper");
+        }
+        Printer printer = new LogPrinter(Log.DEBUG, "LooperLog");
+        looper.setMessageLogging(printer);
+
     }
 
-    class PostTask extends AsyncTask<String, Void, String> {
-        private ProgressDialog progress;
+    private void showProgressDialog() {
+        Log.d(TAG, "onClicked");
+        ProgressDialog progress = new ProgressDialog(me);
+        progress.setTitle("Processing");
+        progress.setMessage("Please wait...");
+        progress.setCancelable(true);
+        progress.show();
 
-        @Override
-        protected void onPreExecute() {
-            progress = ProgressDialog.show(StatusActivity.this, "Posting",
-                    "Please wait...");
-            progress.setCancelable(true);
+        try {
+            Log.d(TAG, "Sleep for 3 seconds");
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-
-        // Executes on a non-UI thread
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                SharedPreferences prefs = PreferenceManager
-                        .getDefaultSharedPreferences(StatusActivity.this);
-                String username = prefs.getString("username", "student");
-                String password = prefs.getString("password", "password");
-                Log.d(TAG, "Try to post for username:" + username + " and password:" + password);
-
-                YambaClient cloud = new YambaClient(username, password);
-                cloud.postStatus(params[0]);
-
-                Log.d(TAG, "Successfully posted to the cloud: " + params[0]);
-                return "Successfully posted";
-            } catch (Exception e) {
-                Log.e(TAG, "Failed to post to the cloud", e);
-                e.printStackTrace();
-                return "Failed to post";
-            }
-        }
-
-        // Called after doInBackground() on UI thread
-        @Override
-        protected void onPostExecute(String result) {
-            progress.dismiss();
-            if (this != null && result != null)
-                Toast.makeText(StatusActivity.this, result, Toast.LENGTH_LONG)
-                        .show();
-        }
-
+        progress.dismiss();
     }
 
 }

@@ -6,12 +6,49 @@ In this lab you will add an item to the action bar.
 
 **Steps**
 
- .1)  Add action bar item.
- 
+ .1)  Add a new menu item to the action bar
+
+  .1a)  Add an item to the +res/menu/menu.xml+ file.
+
+ [source]
+ ----
  <?xml version="1.0" encoding="utf-8"?>
  <menu xmlns:android="http://schemas.android.com/apk/res/android">
-     <item android:id="@+id/menu_save"
-           android:icon="@drawable/ic_menu_save"
-           android:title="@string/menu_save"
+     <item android:id="@+id/mi_status"
+           android:title="@string/menu_status"
+           android:showAsAction="ifRoom|withText" />
+     <item android:id="@+id/mi_setting"
+           android:title="@string/menu_setting"
            android:showAsAction="ifRoom|withText" />
  </menu>
+ ----
+
+  .1b)  Handle the item in the activity
+
+[source]
+----
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+      // Inflate the menu; this adds items to the action bar if it is present.
+      getMenuInflater().inflate(R.menu.main, menu);
+      return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+      // Handle action bar item clicks here. The action bar will
+      // automatically handle clicks on the Home/Up button, so long
+      // as you specify a parent activity in AndroidManifest.xml.
+      int id = item.getItemId();
+      if (id == R.id.action_settings) {
+          return true;
+      }
+      return super.onOptionsItemSelected(item);
+  }
+----
+
+ - Enable home navigation
+
+ - Start Activities with correct Intent flags
+
+ - Check menu selection for home button

@@ -365,7 +365,7 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 </div>
 <div id="content">
 <div class="paragraph">
-<p><strong>Lab 5.0 – Create PrefsActivity and wire it to the app   </strong></p>
+<p><strong>Lab 6.0 – Create PrefsActivity and wire it to the app   </strong></p>
 </div>
 <div class="paragraph">
 <p><strong>Overview: </strong></p>
@@ -543,15 +543,28 @@ public boolean onOptionsItemSelected(MenuItem item) {
 </div>
 </div>
 </li>
+<li>
+<p>Create menu declaration</p>
+</li>
 </ol>
 </div>
 </li>
 </ol>
 </div>
+<div class="paragraph">
+<p>&lt;menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity" &gt;
+    &lt;item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never" /&gt;
+&lt;/menu&gt;</p>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2014-06-01 16:53:08 CDT
+Last updated 2014-06-10 12:40:18 PDT
 </div>
 </div>
 </body>

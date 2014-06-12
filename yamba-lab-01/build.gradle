@@ -2,9 +2,9 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.3'
+    buildToolsVersion '19.1.0'
     defaultConfig {
-        packageName 'com.thenewcircle.yamba'
+        applicationId 'com.thenewcircle.yamba'
         minSdkVersion 19
         targetSdkVersion 19
         versionCode 1
@@ -22,5 +22,4 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:19.+'
 }

@@ -1,8 +1,9 @@
 package com.thenewcircle.yamba;
 
+import android.app.Activity;
 import android.os.Bundle;
 
-public class SettingsActivity extends SubActivity {
+public class SettingsActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -18,4 +19,5 @@ public class SettingsActivity extends SubActivity {
 							fragment.getClass().getSimpleName()).commit();
 		}
 	};
+
 }

@@ -56,3 +56,5 @@ You can also modify the manifest file manually.  Verify that the entry in the ma
 
 Remove the +<intent-filter>+ element from the +StatusActivity+ activity.  Only one
 launcher is allowed for the application.
+
+Note: This activity could control multiple fragments.

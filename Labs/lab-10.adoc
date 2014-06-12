@@ -1,0 +1,9 @@
+**Lab 10.0 – Use Static Fragments   **
+
+**Overview: **
+
+In this lab you will use a single activity to control multiple fragments.
+
+**Steps**
+
+ .1)  Step 1

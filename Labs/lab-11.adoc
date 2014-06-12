@@ -1,0 +1,116 @@
+**Lab 11.0 – Create Service to Fetch Timeline  **
+
+**Overview: **
+
+In this lab you will create a service to fetch timeline data from the Yamba service.
+
+**Steps**
+
+ 1.) Create the Java class for the service.
+
+ 1a.) Create a new class called +RefreshService+.
+
+This will be a subclass of +IntentService+ rather than +Service+ so that this service
+will run on a worker thread instead of the main UI thread.
+
+Right click on the "com.thenewcircle.yamba" package to bring up the context menu.
+
+Select the following options:
+
+New -> Service -> Service (IntentService)
+
+Review the generated code.
+
+Or create the class using the "Java Class" wizard in which case you will code the methods yourself.
+
+[source]
+----
+public class RefreshService extends IntentService {
+
+  static final String TAG = RefreshService.class.getSimpleName();
+
+}
+----
+
+Note: The class is no complete and will produce compiler errors.
+
+ 1b.) Override the +onHandleIntent+ method
+
+[source]
+----
+@Override
+  protected void onHandleIntent(Intent intent) {
+}
+----
+
+ 1c.) Create the constructor
+
+[source]
+----
+public RefreshService(String name) {
+  super(name);
+}
+----
+
+ 1d.) Add code to perform the data retrieval.
+
+In the +onHandleIntent+ method use the YambaClient to retrieve data.
+
+Review the javadoc for YambaClient to determine how to fetch the data.
+
+Use the following code as a starting point:
+
+[source]
+----
+int MAX_POSTS = 100;
+
+YambaClient yambaClient = new YambaClient("student","password");
+
+List<YambaClient.Status> timeline = yambaClient.getTimeline(MAX_POSTS);
+
+for (Status status : timeline) {
+    Log.d(TAG, String.format("%s: %s", status.getUser(), status.getMessage()));
+}
+----
+
+Note: You will need to add the try/catch block to handle possible exceptions.
+You will also want to retrieve the username/password from Shared Preferences
+instead of hard-coding them.
+
+
+ 2.) Register the service in the AndroidManifest.xml file.
+
+[source]
+----
+ <application ...>
+ ...
+   <service android:name=".RefreshService" />
+ ...
+ </application>
+----
+
+ 3.) Start the service from the app.
+
+ 3a.)  Create a "Refresh" menu option
+
+[source]
+----
+<item
+   android:title="@string/titleRefresh"
+   android:id="@+id/action_refresh"
+   android:icon="@android:drawable/ic_menu_rotate">
+</item>
+----
+
+ 3b.)  Start the service when the user selects the "Refresh" menu item
+
+[source]
+----
+case R.id.action_refresh:
+    startService(new Intent(this, RefreshService.class)); //
+    break;
+----
+
+ 4.) Run the app and review the log to make sure that the service is fetching data
+ properly.
+

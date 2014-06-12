@@ -1,6 +1,4 @@
-package com.marakana.android.yamba;
-
-import java.util.List;
+package com.thenewcircle.yamba;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -13,6 +11,8 @@ import android.widget.Toast;
 import com.marakana.android.yamba.clientlib.YambaClient;
 import com.marakana.android.yamba.clientlib.YambaClient.Status;
 import com.marakana.android.yamba.clientlib.YambaClientException;
+
+import java.util.List;
 
 public class RefreshService extends IntentService {
 	private static final String TAG = RefreshService.class.getSimpleName();

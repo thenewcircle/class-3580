@@ -371,15 +371,85 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 <p><strong>Overview: </strong></p>
 </div>
 <div class="paragraph">
-<p>In this lab you will create a layout to be used when the device is in landscape mode.</p>
+<p>In this lab you add code to handle a UI event. As the user enters text for their update, the
+activity should display the number of characters left to use (updates are a maximum of 140 characters).</p>
 </div>
 <div class="paragraph">
 <p><strong>Steps</strong></p>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>.1) Add a TextView with id text_count to status activity. (hint: don’t forget to update landscape layout as well!).</pre>
+<pre>.1) Add a handler for the "Tweet" button.</pre>
 </div>
+</div>
+<div class="paragraph">
+<p>When the user presses the "Tweet" button, write a message to the log file.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>.1a) Create an +onClick+ method to handle the button press.  The method should
+take a +View+ as an arguement.</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>private static final String TAG = StatusActivity.class.getSimpleName();
+
+public void onClick(View v) {
+    Log.d(TAG, "Button Clicked");
+}</code></pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>.1b) Add an +onClick+ attribute to the status activity layout in the &lt;Button&gt; element.</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>android:onClick="onClick"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The value of the attribute must correspond to the name of the method in the activity.</p>
+</div>
+<div class="paragraph">
+<p>Run the app and verify that the onClick listener is being called.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>.1c) Implement the +onClick+ listener in +StatusActivity.java+.</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>public class StatusActivity extends Activity implements OnClickListener {</code></pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>.1d) Assign the onClick Listener to the button</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>// Find Button object
+Button myButton = (Button) findViewById(R.id.status_button_tweet);
+
+// Register activity as click listener
+myButton.setOnClickListener(this);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note:  Remove the <code>onClick</code> attribute in "status_activity.xml".  It is now redundant.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>.2) Add a TextView with id +status_text_count+ to activity layout. This will be in file +res/layout/activity_status.xml+</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Hint: don’t forget to update landscape layout as well!</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -395,7 +465,7 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>.2) Add a TextWatcher listener to editStatus and update textCount as user types.</pre>
+<pre>.3) Add a TextWatcher listener to the status text field and update textCount as the user types.</pre>
 </div>
 </div>
 <div class="listingblock">
@@ -408,12 +478,6 @@ mTextStatus.addTextChangedListener(new TextWatcher() {
   	public void afterTextChanged(Editable s) {
     		int count = 140 - s.length();
     		mTextCount.setText(Integer.toString(count));
-
-    		if (count &lt; 50) {
-    			mTextCount.setTextColor(Color.RED);
-    		} else {
-    			mTextCount.setTextColor(mDefaultColor);
-    		}
   	}
 
   	@Override
@@ -427,30 +491,31 @@ mTextStatus.addTextChangedListener(new TextWatcher() {
 });</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Question 1: Is it necessary to provide overrides for <code>beforeTextChanged</code> and
+<code>onTextChanged</code> since they have no code?</p>
+</div>
+<div class="paragraph">
+<p>Question 2: Should the code be added to <code>onTextChanged</code> instead of <code>afterTextChanged</code>?</p>
+</div>
 <div class="literalblock">
 <div class="content">
-<pre>.3) Tell user how many characters are left, assuming we have 140 total.</pre>
+<pre>.4) If the update exceeds 140 characters then make the count red as a warning.</pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>@Override
-public void afterTextChanged(Editable s) {
-    int count = 140 - s.length();
-    mTextCount.setText(Integer.toString(count));
-
-    if (count &lt; 50) {
-      mTextCount.setTextColor(Color.RED);
-    } else {
-      mTextCount.setTextColor(mDefaultColor);
-    }
-}</code></pre>
+<pre class="highlight"><code> if (count &lt; 50) {
+   mTextCount.setTextColor(Color.RED);
+ } else {
+   mTextCount.setTextColor(mDefaultColor);
+ }</code></pre>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2014-05-30 20:36:38 CDT
+Last updated 2014-06-08 17:09:12 PDT
 </div>
 </div>
 </body>

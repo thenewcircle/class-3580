@@ -1,0 +1,414 @@
+**Lab 13.0 – Create A Content Provider  **
+
+**Overview: **
+
+In this lab you will create a ContentProvider used to enable wrap the database
+and provide a consistent schema to maintain the data from other parts of the app.
+
+**Steps**
+
+ 1.) Create a new Java class that subclasses the system’s ContentProvider class.
+
+Be sure to define the TAG constant.
+
+Also, override the +onCreate+ method and create the wrapper around the database
+(i.e. the +dbHelper+ object).
+
+[source]
+----
+public class StatusProvider extends ContentProvider {
+
+    	private static final String TAG = StatusProvider.class.getSimpleName();
+
+    	DbHelper dbHelper;
+
+      @Override
+      public boolean onCreate() {
+         dbHelper = new DbHelper(getContext());
+         Log.d(TAG, "onCreated");
+         return false;
+      }
+----
+
+ 2.) Declare your CONTENT_URI.
+
+ 2a.) Define the constants for the URI
+
+Since the CONTENT_URI is used in other parts of the app, define it in the
++StatusContract+ class.
+
+[source]
+----
+// content://com.marakana.android.yamba.StatusProvider/status
+public static final String AUTHORITY = "com.thenewcircle.yamba.StatusProvider";
+public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY  + "/" + TABLE);
+----
+
+ 2b.) Create the URL matcher
+
+The purpose of this method is associate the URI provided to a Content Provider with
+the function that the calling client wants to perform.
+
+[source]
+----
+private static final UriMatcher sURIMatcher = new UriMatcher(
+      UriMatcher.NO_MATCH);
+static {
+   sURIMatcher.addURI(StatusContract.AUTHORITY, StatusContract.TABLE,
+         StatusContract.STATUS_DIR);
+   sURIMatcher.addURI(StatusContract.AUTHORITY, StatusContract.TABLE
+         + "/#", StatusContract.STATUS_ITEM);
+}
+----
+
+ 3.) Implement all the unimplemented methods including insert(), update(), delete(), query(), and getType().
+
+ 3a.)  Implement +getType+
+
+[source]
+----
+@Override
+public String getType(Uri uri) {
+   switch (sURIMatcher.match(uri)) {
+   case StatusContract.STATUS_DIR:
+      Log.d(TAG, "gotType: " + StatusContract.STATUS_TYPE_DIR);
+      return StatusContract.STATUS_TYPE_DIR;
+   case StatusContract.STATUS_ITEM:
+      Log.d(TAG, "gotType: " + StatusContract.STATUS_TYPE_ITEM);
+      return StatusContract.STATUS_TYPE_ITEM;
+   default:
+      throw new IllegalArgumentException("Illegal uri: " + uri);
+   }
+}
+----
+
+ 3b.)  Implement +query+
+
+[source]
+----
+// SELECT username, message, created_at FROM status WHERE user='bob' ORDER
+// BY created_at DESC;
+@Override
+public Cursor query(Uri uri, String[] projection, String selection,
+      String[] selectionArgs, String sortOrder) {
+
+   SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+   qb.setTables( StatusContract.TABLE );
+
+   switch (sURIMatcher.match(uri)) {
+   case StatusContract.STATUS_DIR:
+      break;
+   case StatusContract.STATUS_ITEM:
+      qb.appendWhere(StatusContract.Column.ID + "="
+            + uri.getLastPathSegment());
+      break;
+   default:
+      throw new IllegalArgumentException("Illegal uri: " + uri);
+   }
+
+   String orderBy = (TextUtils.isEmpty(sortOrder)) ? StatusContract.DEFAULT_SORT
+         : sortOrder;
+
+   SQLiteDatabase db = dbHelper.getReadableDatabase();
+   Cursor cursor = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+
+   // register for uri changes
+   cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+   Log.d(TAG, "queried records: "+cursor.getCount());
+   return cursor;
+}
+----
+
+ 3c.) Override additional CRUD method for insert
+
+[source]
+----
+@Override
+public Uri insert(Uri uri, ContentValues values) {
+   Uri ret = null;
+
+   // Assert correct uri
+   if (sURIMatcher.match(uri) != StatusContract.STATUS_DIR) {
+      throw new IllegalArgumentException("Illegal uri: " + uri);
+   }
+
+   SQLiteDatabase db = dbHelper.getWritableDatabase();
+   long rowId = db.insertWithOnConflict(StatusContract.TABLE, null,
+         values, SQLiteDatabase.CONFLICT_IGNORE);
+
+   // Was insert successful?
+   if (rowId != -1) {
+      long id = values.getAsLong(StatusContract.Column.ID);
+      ret = ContentUris.withAppendedId(uri, id);
+      Log.d(TAG, "inserted uri: " + ret);
+
+      // Notify that data for this uri has changed
+      getContext().getContentResolver().notifyChange(uri, null);
+   }
+
+   return ret;
+}
+----
+
+ 3d.) Override additional CRUD method for update
+
+[source]
+----
+@Override
+public int update(Uri uri, ContentValues values, String selection,
+      String[] selectionArgs) {
+   String where;
+
+   switch (sURIMatcher.match(uri)) {
+   case StatusContract.STATUS_DIR:
+      // so we count updated rows
+      where = selection;
+      break;
+   case StatusContract.STATUS_ITEM:
+      long id = ContentUris.parseId(uri);
+      where = StatusContract.Column.ID
+            + "="
+            + id
+            + (TextUtils.isEmpty(selection) ? "" : " and ( "
+                  + selection + " )");
+      break;
+   default:
+      throw new IllegalArgumentException("Illegal uri: " + uri);
+   }
+
+   SQLiteDatabase db = dbHelper.getWritableDatabase();
+   int ret = db.update(StatusContract.TABLE, values, where, selectionArgs);
+
+   if(ret>0) {
+      // Notify that data for this uri has changed
+      getContext().getContentResolver().notifyChange(uri, null);
+   }
+   Log.d(TAG, "updated records: " + ret);
+   return ret;
+}
+----
+
+ 3e.) Override additional CRUD method for delete
+
+[source]
+----
+
+// Implement Purge feature
+// Use db.delete()
+// DELETE FROM status WHERE id=? AND user='?'
+// uri: content://com.thenewcircle.yamba.StatusProvider/status/47
+@Override
+public int delete(Uri uri, String selection, String[] selectionArgs) {
+   String where;
+
+   switch (sURIMatcher.match(uri)) {
+   case StatusContract.STATUS_DIR:
+      // so we count deleted rows
+      where = (selection == null) ? "1" : selection;
+      break;
+   case StatusContract.STATUS_ITEM:
+      long id = ContentUris.parseId(uri);
+      where = StatusContract.Column.ID
+            + "="
+            + id
+            + (TextUtils.isEmpty(selection) ? "" : " and ( "
+                  + selection + " )");
+      break;
+   default:
+      throw new IllegalArgumentException("Illegal uri: " + uri);
+   }
+
+   SQLiteDatabase db = dbHelper.getWritableDatabase();
+   int ret = db.delete(StatusContract.TABLE, where, selectionArgs);
+
+   if(ret>0) {
+      // Notify that data for this uri has changed
+      getContext().getContentResolver().notifyChange(uri, null);
+   }
+   Log.d(TAG, "deleted records: " + ret);
+   return ret;
+}
+----
+
+ 4.) Declare your content provider in the +AndroidManifest.xml+ file.
+
+Declare the provider in the <application> tag.
+
+[source]
+----
+<provider
+    android:name=".StatusProvider"
+    android:authorities="com.thenewcircle.yamba.StatusProvider"
+    android:exported="false" />
+----
+
+  Spoiler: Here is the complete code for this exercise:
+
+[source]
+----
+public class StatusProvider extends ContentProvider {
+	private static final String TAG = StatusProvider.class.getSimpleName();
+	private DbHelper dbHelper;
+
+	private static final UriMatcher sURIMatcher = new UriMatcher(
+			UriMatcher.NO_MATCH);
+	static {
+		sURIMatcher.addURI(StatusContract.AUTHORITY, StatusContract.TABLE,
+				StatusContract.STATUS_DIR);
+		sURIMatcher.addURI(StatusContract.AUTHORITY, StatusContract.TABLE
+				+ "/#", StatusContract.STATUS_ITEM);
+	}
+
+	@Override
+	public boolean onCreate() {
+		dbHelper = new DbHelper(getContext());
+		Log.d(TAG, "onCreated");
+		return false;
+	}
+
+	@Override
+	public String getType(Uri uri) {
+		switch (sURIMatcher.match(uri)) {
+		case StatusContract.STATUS_DIR:
+			Log.d(TAG, "gotType: " + StatusContract.STATUS_TYPE_DIR);
+			return StatusContract.STATUS_TYPE_DIR;
+		case StatusContract.STATUS_ITEM:
+			Log.d(TAG, "gotType: " + StatusContract.STATUS_TYPE_ITEM);
+			return StatusContract.STATUS_TYPE_ITEM;
+		default:
+			throw new IllegalArgumentException("Illegal uri: " + uri);
+		}
+	}
+
+	@Override
+	public Uri insert(Uri uri, ContentValues values) {
+		Uri ret = null;
+
+		// Assert correct uri
+		if (sURIMatcher.match(uri) != StatusContract.STATUS_DIR) {
+			throw new IllegalArgumentException("Illegal uri: " + uri);
+		}
+
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		long rowId = db.insertWithOnConflict(StatusContract.TABLE, null,
+				values, SQLiteDatabase.CONFLICT_IGNORE);
+
+		// Was insert successful?
+		if (rowId != -1) {
+			long id = values.getAsLong(StatusContract.Column.ID);
+			ret = ContentUris.withAppendedId(uri, id);
+			Log.d(TAG, "inserted uri: " + ret);
+
+			// Notify that data for this uri has changed
+			getContext().getContentResolver().notifyChange(uri, null);
+		}
+
+		return ret;
+	}
+
+	@Override
+	public int update(Uri uri, ContentValues values, String selection,
+			String[] selectionArgs) {
+		String where;
+
+		switch (sURIMatcher.match(uri)) {
+		case StatusContract.STATUS_DIR:
+			// so we count updated rows
+			where = selection;
+			break;
+		case StatusContract.STATUS_ITEM:
+			long id = ContentUris.parseId(uri);
+			where = StatusContract.Column.ID
+					+ "="
+					+ id
+					+ (TextUtils.isEmpty(selection) ? "" : " and ( "
+							+ selection + " )");
+			break;
+		default:
+			throw new IllegalArgumentException("Illegal uri: " + uri);
+		}
+
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		int ret = db.update(StatusContract.TABLE, values, where, selectionArgs);
+
+		if(ret>0) {
+			// Notify that data for this uri has changed
+			getContext().getContentResolver().notifyChange(uri, null);
+		}
+		Log.d(TAG, "updated records: " + ret);
+		return ret;
+	}
+
+	// Implement Purge feature
+	// Use db.delete()
+	// DELETE FROM status WHERE id=? AND user='?'
+	// uri: content://com.thenewcircle.yamba.StatusProvider/status/47
+	@Override
+	public int delete(Uri uri, String selection, String[] selectionArgs) {
+		String where;
+
+		switch (sURIMatcher.match(uri)) {
+		case StatusContract.STATUS_DIR:
+			// so we count deleted rows
+			where = (selection == null) ? "1" : selection;
+			break;
+		case StatusContract.STATUS_ITEM:
+			long id = ContentUris.parseId(uri);
+			where = StatusContract.Column.ID
+					+ "="
+					+ id
+					+ (TextUtils.isEmpty(selection) ? "" : " and ( "
+							+ selection + " )");
+			break;
+		default:
+			throw new IllegalArgumentException("Illegal uri: " + uri);
+		}
+
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		int ret = db.delete(StatusContract.TABLE, where, selectionArgs);
+
+		if(ret>0) {
+			// Notify that data for this uri has changed
+			getContext().getContentResolver().notifyChange(uri, null);
+		}
+		Log.d(TAG, "deleted records: " + ret);
+		return ret;
+	}
+
+	// SELECT username, message, created_at FROM status WHERE user='bob' ORDER
+	// BY created_at DESC;
+	@Override
+	public Cursor query(Uri uri, String[] projection, String selection,
+			String[] selectionArgs, String sortOrder) {
+
+		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+		qb.setTables( StatusContract.TABLE );
+
+		switch (sURIMatcher.match(uri)) {
+		case StatusContract.STATUS_DIR:
+			break;
+		case StatusContract.STATUS_ITEM:
+			qb.appendWhere(StatusContract.Column.ID + "="
+					+ uri.getLastPathSegment());
+			break;
+		default:
+			throw new IllegalArgumentException("Illegal uri: " + uri);
+		}
+
+		String orderBy = (TextUtils.isEmpty(sortOrder)) ? StatusContract.DEFAULT_SORT
+				: sortOrder;
+
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		Cursor cursor = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+
+		// register for uri changes
+		cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+		Log.d(TAG, "queried records: "+cursor.getCount());
+		return cursor;
+	}
+
+}
+----
+

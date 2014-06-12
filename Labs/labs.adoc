@@ -5,18 +5,19 @@
 
 |01 |Status Activity Layout                           |1    |93-96 (project creation), 97-111, 112 (client library)
 |02 |Status Activity Landscape Layout                 |1    |124-127
-|03 |Handling UI Events                               |2    |
-|04 |Add a Dialog while posting                       |2    |
-|05 |Using fragments statically                       |3    |Yamba-2, pg 129-139 (all of chapter 8)
+|03 |Handling UI Events                               |2    |sl 86-93
+|AT |AsyncTask                                        |2    |pg 113
+|04 |Add a Dialog while posting                       |2    |sl 146,
+|05 |Using fragments statically                       |3    |Yamba-2, sl 115, pg 129-139 (all of chapter 8)
 |06 |Create PrefsActivity and wire it to the app      |3    |Yamba-3, pg 141
 |07 |Add server and refresh interval to preferences   |3    |Yamba-4, pg 163 (ch 10 - services)
 |08 |Create Main activity                             |3    |pg 148, (menu pg 150)
 |09 |Add Action Bar Item                              |3    |pg 148, sl 159
 |10 |Use static fragments                             |3    |
-|11 |Add Refresh button to Acton Bar                  |4    |
-|12 |Read Shared Prefs                                |4    |
-|13 |Implement update()                               |5    |
-|14 |Create a Timeline Fragment                       |5    |
+|11 |Add Refresh button to Acton Bar (Service)        |4    |pg 163, sl ?
+|12 |Database                                         |4    |pg 175, sl 222
+|13 |ContentProvider                                  |5    |pg 186
+|14 |Create a Timeline Fragment                       |5    |pg 205, pg 210 (ViewBinder)
 |15 |Create a Custom View                             |5    |
 |16 |Create NotificationReceiver                      |5    |
 
