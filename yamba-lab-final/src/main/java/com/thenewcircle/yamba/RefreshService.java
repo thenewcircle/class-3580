@@ -51,16 +51,18 @@ public class RefreshService extends IntentService {
 		try {
 			int count = 0;
 			List<Status> timeline = cloud.getTimeline(20);
+
 			for (Status status : timeline) {
+
 				values.clear();
+
 				values.put(StatusContract.Column.ID, status.getId());
 				values.put(StatusContract.Column.USER, status.getUser());
 				values.put(StatusContract.Column.MESSAGE, status.getMessage());
-				values.put(StatusContract.Column.CREATED_AT, status
-						.getCreatedAt().getTime());
+				values.put(StatusContract.Column.CREATED_AT, status.getCreatedAt().getTime());
 
-				Uri uri = getContentResolver().insert(
-						StatusContract.CONTENT_URI, values);
+				Uri uri = getContentResolver().insert(StatusContract.CONTENT_URI, values);
+
 				if (uri != null) {
 					count++;
 					Log.d(TAG,
@@ -83,7 +85,7 @@ public class RefreshService extends IntentService {
 		return;
 	}
 
-	@Override
+    @Override
 	public void onDestroy() {
 		super.onDestroy();
 		Log.d(TAG, "onDestroyed");

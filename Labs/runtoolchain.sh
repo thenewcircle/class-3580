@@ -1,3 +1,4 @@
+#!/bin/sh
 asciidoctor lab-01.adoc -o lab-01.html
 asciidoctor lab-02.adoc -o lab-02.html
 asciidoctor lab-03.adoc -o lab-03.html

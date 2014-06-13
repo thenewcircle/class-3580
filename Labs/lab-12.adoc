@@ -63,5 +63,8 @@ public class StatusContract {
 		public static final String MESSAGE = "message";
 		public static final String CREATED_AT = "created_at";
 	}
+
+   public static final int STATUS_ITEM = 1;
+   public static final int STATUS_DIR = 2;
 }
 ----

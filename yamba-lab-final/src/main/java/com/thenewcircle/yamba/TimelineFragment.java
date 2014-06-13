@@ -16,8 +16,9 @@ import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TimelineFragment extends ListFragment implements
-		LoaderCallbacks<Cursor> {
+public class TimelineFragment extends ListFragment implements LoaderCallbacks<Cursor>
+
+{
 	private static final String TAG = TimelineFragment.class.getSimpleName();
 	private static final String[] FROM = { StatusContract.Column.USER,
 			StatusContract.Column.MESSAGE, StatusContract.Column.CREATED_AT,
@@ -58,6 +59,7 @@ public class TimelineFragment extends ListFragment implements
 
 		mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_item,
 				null, FROM, TO, 0);
+
 		mAdapter.setViewBinder(VIEW_BINDER);
 
 		setListAdapter(mAdapter);

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragment_timeline"
-        android:name="com.marakana.android.yamba.TimelineFragment"
+        android:name="com.thenewcircle.yamba.TimelineFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -15,7 +15,7 @@
 
     <fragment
         android:id="@+id/fragment_details"
-        android:name="com.marakana.android.yamba.DetailsFragment"
+        android:name="com.thenewcircle.yamba.DetailsFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

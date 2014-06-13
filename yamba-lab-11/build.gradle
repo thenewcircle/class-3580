@@ -3,9 +3,10 @@ apply plugin: 'android'
 android {
     compileSdkVersion 19
     buildToolsVersion '19.1.0'
+
     defaultConfig {
         packageName 'com.thenewcircle.yamba'
-        minSdkVersion 14
+        minSdkVersion 19
         targetSdkVersion 19
         versionCode 1
         versionName '1.0'
@@ -15,8 +16,6 @@ android {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-    productFlavors {
     }
 }
 
