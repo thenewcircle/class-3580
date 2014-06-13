@@ -11,3 +11,5 @@ include ':yamba-lab-09'
 
 include ':yamba-lab-11'
 include ':yamba-lab-final'
+
+include ':yambaClient'

@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
 			startActivity(new Intent(this, SettingsActivity.class));
 			return true;
 		case R.id.action_tweet:
-			startActivity(new Intent("com.thenewcirlce.yamba.action.tweet"));
+			startActivity(new Intent(this, StatusActivity.class));
 			return true;
 		case R.id.action_refresh:
 			startService(new Intent(this, RefreshService.class));
