@@ -3,8 +3,9 @@ package com.thenewcircle.yamba;
 import android.app.IntentService;
 import android.content.Intent;
 
-import com.marakana.android.yamba.clientlib.YambaClient;
-import com.marakana.android.yamba.clientlib.YambaClientException;
+import com.thenewcircle.yamba.client.Status;
+import com.thenewcircle.yamba.client.YambaClient;
+import com.thenewcircle.yamba.client.YambaClientException;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class FetchTimelineDataService extends IntentService {
         YambaClient yambaClient = new YambaClient("student","password");
 
         try {
-            List<YambaClient.Status> timeline = yambaClient.getTimeline(MAX_POSTS);
+            List<Status> timeline = yambaClient.getTimeline(MAX_POSTS);
         } catch (YambaClientException e) {
             e.printStackTrace();
         }

@@ -10,9 +10,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.marakana.android.yamba.clientlib.YambaClient;
-import com.marakana.android.yamba.clientlib.YambaClient.Status;
-import com.marakana.android.yamba.clientlib.YambaClientException;
+import com.thenewcircle.yamba.client.Status;
+import com.thenewcircle.yamba.client.YambaClient;
+import com.thenewcircle.yamba.client.YambaClientException;
 
 import java.util.List;
 

@@ -56,6 +56,7 @@ public class StatusActivity extends Activity {
                 }
                 //progress.dismiss();
 
+                Looper.getMainLooper();
 
                 Handler handler = new Handler();
 

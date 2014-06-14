@@ -20,6 +20,8 @@
 |14 |Create a Timeline Fragment                       |5    |pg 205, pg 210 (ViewBinder)
 |15 |Create a Custom View                             |5    |
 |16 |Create NotificationReceiver                      |5    |
+|17 |Unit Testing                                     |5    |
+|18 |Android Library                                  |5    |
 
 |======================
 

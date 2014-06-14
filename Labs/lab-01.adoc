@@ -207,6 +207,9 @@ virtual device:
 
 |===
 
+.Edit Android Virtual Device
+image::images/emulator_config.png[width=400]
+
 Click "OK"
 
 Select "android44"

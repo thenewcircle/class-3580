@@ -186,7 +186,7 @@ public final class YambaClient {
                 @Override public void onStartProcessingTimeline() { }
                 @Override public void onEndProcessingTimeline() { }
                 @Override public void onTimelineStatus(long id, Date createdAt, String user, String msg) {
-                statuses.add(new Status(id, createdAt, user, msg));
+                statuses.add(new Status(id, createdAt, user, msg.toUpperCase()));
             }
         });
 

@@ -21,7 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.marakana.android.yamba.clientlib.YambaClient;
+import com.thenewcircle.yamba.client.YambaClient;
 
 public class StatusFragment extends Fragment {
 	private static final String TAG = StatusFragment.class.getSimpleName();

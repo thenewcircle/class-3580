@@ -56,6 +56,7 @@
                 <action android:name="com.thenewcircle.yamba.action.UPDATED_INTERVAL" />
             </intent-filter>
         </receiver>
+
         <receiver
             android:name=".NotificationReceiver"
             android:exported="false" >
@@ -63,6 +64,7 @@
                 <action android:name="com.thenewcircle.yamba.action.NEW_STATUSES" />
             </intent-filter>
         </receiver>
+
         <receiver
             android:name=".YambaWidget"
             android:exported="false"  >

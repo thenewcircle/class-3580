@@ -14,3 +14,5 @@ asciidoctor lab-13.adoc -o lab-13.html
 asciidoctor lab-14.adoc -o lab-14.html
 asciidoctor lab-AT.adoc -o lab-AT.html
 
+asciidoctor "Lab 03.1 - Creating Unit Tests (AS).adoc" -o lab-17.html
+
